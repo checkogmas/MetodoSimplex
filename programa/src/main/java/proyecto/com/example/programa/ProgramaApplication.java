@@ -190,6 +190,7 @@ public class ProgramaApplication {
         return -1;
     }
 
+    /// Test
     private static double suma(double[] arr) {
         double suma = 0;
         for (double numero : arr) {
