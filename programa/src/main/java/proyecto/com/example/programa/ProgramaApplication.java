@@ -42,15 +42,7 @@ public class ProgramaApplication {
             double[][] tabla = construirTabla(coeficientes, valores, funcionObjetivo);
 
             // Aplicar el método Simplex
-            int iteracion = 1;
-            while (!esOptima(tabla)) {
-                int columnaPivote = columnaPivote(tabla);
-                int filaPivote = filaPivote(tabla, columnaPivote);
-                pivote(tabla, filaPivote, columnaPivote);
-                System.out.println("Tabla " + iteracion + ":");
-                imprimirTabla(tabla);
-                iteracion++;
-            }
+            tabla = simplex(tabla);
 
             // Imprimir la solución óptima
             System.out.println("Solución óptima:");
@@ -159,6 +151,19 @@ public class ProgramaApplication {
                 }
             }
         }
+    }
+
+    private static double[][] simplex(double[][] tabla) {
+        int iteracion = 1;
+        while (!esOptima(tabla)) {
+            int columnaPivote = columnaPivote(tabla);
+            int filaPivote = filaPivote(tabla, columnaPivote);
+            pivote(tabla, filaPivote, columnaPivote);
+            System.out.println("Tabla " + iteracion + ":");
+            imprimirTabla(tabla);
+            iteracion++;
+        }
+        return tabla;
     }
 
     private static boolean esOptima(double[][] tabla) {
