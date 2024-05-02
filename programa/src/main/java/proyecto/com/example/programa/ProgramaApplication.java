@@ -19,11 +19,20 @@ public class ProgramaApplication {
 
             // Pedir la función objetivo al usuario
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Ingrese la función objetivo (coeficientes separados por espacios): ");
-            String[] funcionObjetivoStr = scanner.nextLine().split(" ");
-            double[] funcionObjetivo = new double[funcionObjetivoStr.length];
-            for (int i = 0; i < funcionObjetivoStr.length; i++) {
-                funcionObjetivo[i] = Double.parseDouble(funcionObjetivoStr[i]);
+            boolean ingresoCorrecto = false;
+            double[] funcionObjetivo = null;
+            while (!ingresoCorrecto) {
+                System.out.print("Ingrese la función objetivo (coeficientes separados por espacios): ");
+                try {
+                    String[] funcionObjetivoStr = scanner.nextLine().split(" ");
+                    funcionObjetivo = new double[funcionObjetivoStr.length];
+                    for (int i = 0; i < funcionObjetivoStr.length; i++) {
+                        funcionObjetivo[i] = Double.parseDouble(funcionObjetivoStr[i]);
+                    }
+                    ingresoCorrecto = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: los coeficientes de la función solo pueden ser números. Intente de nuevo.");
+                }
             }
 
             // Pedir las restricciones al usuario
