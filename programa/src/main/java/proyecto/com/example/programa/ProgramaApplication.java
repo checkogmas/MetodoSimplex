@@ -12,13 +12,12 @@ import java.util.Scanner;
 public class ProgramaApplication {
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
         try {
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Datos");
 
-            // Pedir la función objetivo al usuario
-            Scanner scanner = new Scanner(System.in);
             boolean ingresoCorrecto = false;
             double[] funcionObjetivo = null;
             while (!ingresoCorrecto) {
@@ -35,7 +34,6 @@ public class ProgramaApplication {
                 }
             }
 
-            // Pedir las restricciones al usuario
             double[][] coeficientes = new double[3][2];
             double[] valores = new double[3];
             for (int i = 1; i <= 3; i++) {
@@ -47,13 +45,10 @@ public class ProgramaApplication {
                 valores[i - 1] = Double.parseDouble(restriccionStr[restriccionStr.length - 1]);
             }
 
-            // Construir la tabla del Simplex
             double[][] tabla = construirTabla(coeficientes, valores, funcionObjetivo);
 
-            // Aplicar el método Simplex
             tabla = simplex(tabla);
 
-            // Imprimir la solución óptima
             System.out.println("Solución óptima:");
             System.out.println("Función objetivo = " + -tabla[tabla.length - 1][tabla[0].length - 1]);
             for (int i = 0; i < coeficientes[0].length; i++) {
@@ -66,7 +61,7 @@ public class ProgramaApplication {
                 }
             }
 
-            try (var fileOut = new FileOutputStream("valores.xlsx")){
+            try (var fileOut = new FileOutputStream("valores.xlsx")) {
                 workbook.write(fileOut);
                 System.out.println("Archivo 'valores.xlsx' creado exitosamente.");
 
@@ -76,6 +71,8 @@ public class ProgramaApplication {
             workbook.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            scanner.close();
         }
     }
 
@@ -84,7 +81,6 @@ public class ProgramaApplication {
         int columnas = coeficientes[0].length + filas + 1;
         double[][] tabla = new double[filas + 1][columnas];
 
-        // Llenar los coeficientes de las restricciones
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < coeficientes[i].length; j++) {
                 tabla[i][j] = coeficientes[i][j];
@@ -92,7 +88,6 @@ public class ProgramaApplication {
             tabla[i][columnas - 1] = valores[i];
         }
 
-        // Llenar los coeficientes de la función objetivo
         for (int i = 0; i < funcionObjetivo.length; i++) {
             tabla[filas][i] = -funcionObjetivo[i];
         }
@@ -146,12 +141,10 @@ public class ProgramaApplication {
         int columnas = tabla[0].length;
         double pivotElement = tabla[filaPivote][columnaPivote];
 
-        // Dividir la fila pivote por el elemento pivote
         for (int j = 0; j < columnas; j++) {
             tabla[filaPivote][j] /= pivotElement;
         }
 
-        // Actualizar las otras filas
         for (int i = 0; i < filas; i++) {
             if (i != filaPivote) {
                 double multiplier = tabla[i][columnaPivote];
@@ -204,7 +197,6 @@ public class ProgramaApplication {
         return -1;
     }
 
-    /// Test
     private static double suma(double[] arr) {
         double suma = 0;
         for (double numero : arr) {
@@ -212,5 +204,4 @@ public class ProgramaApplication {
         }
         return suma;
     }
-
 }
